@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
+import { getStoredProducts, setStoredProducts } from "../lib/products";
 import type { Product } from "../types";
 import "./AdminProducts.css";
 
@@ -27,18 +28,17 @@ export default function AdminProducts() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const stored = localStorage.getItem("gg-admin-products");
-    if (stored) {
-      setProducts(JSON.parse(stored));
-    } else {
-      setProducts(SAMPLE_PRODUCTS);
-      localStorage.setItem("gg-admin-products", JSON.stringify(SAMPLE_PRODUCTS));
+    let stored = getStoredProducts();
+    if (stored.length === 0) {
+      stored = SAMPLE_PRODUCTS;
+      setStoredProducts(stored);
     }
+    setProducts(stored);
   }, []);
 
   const save = (updated: Product[]) => {
     setProducts(updated);
-    localStorage.setItem("gg-admin-products", JSON.stringify(updated));
+    setStoredProducts(updated);
   };
 
   const openAdd = () => {

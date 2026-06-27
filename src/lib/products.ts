@@ -1,5 +1,4 @@
 import type { Product } from "../types";
-import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 
 const STORAGE_KEY = "gg-admin-products";
 
@@ -8,12 +7,16 @@ export function getStoredProducts(): Product[] {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed)) return parsed;
     }
   } catch {
-    // corrupted data, fall through
+    // corrupted data
   }
-  return SAMPLE_PRODUCTS;
+  return [];
+}
+
+export function setStoredProducts(products: Product[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
 }
 
 export function getFeaturedProducts(): Product[] {
