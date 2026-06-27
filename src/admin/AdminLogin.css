@@ -103,3 +103,17 @@
   font-size: 0.8rem;
   color: #94a3b8;
 }
+
+@media (max-width: 480px) {
+  .login-page {
+    padding: 1rem;
+  }
+
+  .login-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .login-card h1 {
+    font-size: 1.3rem;
+  }
+}

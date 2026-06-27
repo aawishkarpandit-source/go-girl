@@ -188,4 +188,20 @@
     opacity: 1;
     pointer-events: all;
   }
+
+  .nav-links a {
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  .logo-text {
+    font-size: 1.1rem;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
 }

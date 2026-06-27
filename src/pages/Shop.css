@@ -73,3 +73,29 @@
   color: #999;
   font-size: 1.1rem;
 }
+
+@media (max-width: 768px) {
+  .shop-page {
+    padding-top: 90px;
+  }
+
+  .shop-container {
+    padding: 0 1rem 3rem;
+  }
+
+  .shop-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .shop-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

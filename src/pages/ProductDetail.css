@@ -134,8 +134,28 @@
 }
 
 @media (max-width: 768px) {
+  .product-detail-page {
+    padding-top: 90px;
+  }
+
+  .pd-container {
+    padding: 0 1rem 3rem;
+  }
+
   .pd-grid {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
+  }
+
+  .pd-name {
+    font-size: 1.5rem;
+  }
+
+  .pd-price {
+    font-size: 1.3rem;
+  }
+
+  .pd-image {
+    aspect-ratio: 1;
   }
 }

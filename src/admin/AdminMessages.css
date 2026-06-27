@@ -205,6 +205,10 @@
   .messages-list {
     border-right: none;
     border-bottom: 1px solid #f1f5f9;
-    max-height: 300px;
+    max-height: 250px;
+  }
+
+  .message-detail {
+    padding: 1rem;
   }
 }
