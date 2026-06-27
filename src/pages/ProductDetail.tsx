@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { dbGetProductById } from "../lib/api";
-import { getProductById } from "../lib/products";
+import { getStoredProducts, setStoredProducts } from "../lib/products";
+import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import { useCart } from "../context/CartContext";
 import type { Product } from "../types";
 import "./ProductDetail.css";
@@ -24,7 +25,12 @@ export default function ProductDetail() {
         if (data.sizes?.length) setSelectedSize(data.sizes[0]);
         if (data.colors?.length) setSelectedColor(data.colors[0]);
       } else {
-        const found = getProductById(id);
+        let stored = getStoredProducts();
+        if (stored.length === 0) {
+          stored = SAMPLE_PRODUCTS;
+          setStoredProducts(stored);
+        }
+        const found = stored.find((p) => p.id === id);
         if (found) {
           setProduct(found);
           if (found.sizes?.length) setSelectedSize(found.sizes[0]);

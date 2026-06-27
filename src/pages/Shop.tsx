@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { dbGetProducts } from "../lib/api";
-import { getStoredProducts } from "../lib/products";
+import { getStoredProducts, setStoredProducts } from "../lib/products";
+import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import type { Product } from "../types";
 import ProductCard from "../components/ProductCard";
 import "./Shop.css";
@@ -29,7 +30,12 @@ export default function Shop() {
       if (data && data.length > 0) {
         setProducts(data);
       } else {
-        let filtered = getStoredProducts().filter((p) => p.in_stock);
+        let stored = getStoredProducts();
+        if (stored.length === 0) {
+          stored = SAMPLE_PRODUCTS;
+          setStoredProducts(stored);
+        }
+        let filtered = stored.filter((p) => p.in_stock);
         if (categoryParam) {
           filtered = filtered.filter((p) => p.category === categoryParam);
         }

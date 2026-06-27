@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { dbGetFeatured } from "../lib/api";
-import { getFeaturedProducts } from "../lib/products";
+import { getStoredProducts, setStoredProducts } from "../lib/products";
+import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import { useInView } from "../hooks/useInView";
 import type { Product } from "../types";
 import ProductCard from "../components/ProductCard";
@@ -26,7 +27,12 @@ export default function Home() {
       if (data && data.length > 0) {
         setFeatured(data);
       } else {
-        setFeatured(getFeaturedProducts());
+        let stored = getStoredProducts();
+        if (stored.length === 0) {
+          stored = SAMPLE_PRODUCTS;
+          setStoredProducts(stored);
+        }
+        setFeatured(stored.filter((p) => p.featured && p.in_stock));
       }
     }
     load();
