@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import type { Product } from "../types";
 import ProductCard from "../components/ProductCard";
 import "./Shop.css";
@@ -21,22 +22,43 @@ export default function Shop() {
   useEffect(() => {
     async function fetchProducts() {
       setLoading(true);
-      let query = supabase.from("products").select("*").eq("in_stock", true);
+      try {
+        let query = supabase.from("products").select("*").eq("in_stock", true);
 
+        if (category && CATEGORY_MAP[category]) {
+          query = query.eq("category", CATEGORY_MAP[category]);
+        }
+
+        if (sortBy === "price-low") {
+          query = query.order("price", { ascending: true });
+        } else if (sortBy === "price-high") {
+          query = query.order("price", { ascending: false });
+        } else {
+          query = query.order("created_at", { ascending: false });
+        }
+
+        const { data } = await query;
+        if (data && data.length > 0) {
+          setProducts(data);
+          setLoading(false);
+          return;
+        }
+      } catch {
+        // Supabase not configured, use sample data
+      }
+
+      let filtered = SAMPLE_PRODUCTS.filter((p) => p.in_stock);
       if (category && CATEGORY_MAP[category]) {
-        query = query.eq("category", CATEGORY_MAP[category]);
+        filtered = filtered.filter((p) => p.category === CATEGORY_MAP[category]);
       }
-
       if (sortBy === "price-low") {
-        query = query.order("price", { ascending: true });
+        filtered.sort((a, b) => a.price - b.price);
       } else if (sortBy === "price-high") {
-        query = query.order("price", { ascending: false });
+        filtered.sort((a, b) => b.price - a.price);
       } else {
-        query = query.order("created_at", { ascending: false });
+        filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       }
-
-      const { data } = await query;
-      setProducts(data || []);
+      setProducts(filtered);
       setLoading(false);
     }
     fetchProducts();

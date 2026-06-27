@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import type { Product } from "../types";
 import ProductCard from "../components/ProductCard";
 import "./Home.css";
@@ -17,12 +18,20 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchFeatured() {
-      const { data } = await supabase
-        .from("products")
-        .select("*")
-        .eq("featured", true)
-        .limit(4);
-      if (data) setFeatured(data);
+      try {
+        const { data } = await supabase
+          .from("products")
+          .select("*")
+          .eq("featured", true)
+          .limit(4);
+        if (data && data.length > 0) {
+          setFeatured(data);
+          return;
+        }
+      } catch {
+        // Supabase not configured, use sample data
+      }
+      setFeatured(SAMPLE_PRODUCTS.filter((p) => p.featured));
     }
     fetchFeatured();
   }, []);

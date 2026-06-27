@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import { useCart } from "../context/CartContext";
 import type { Product } from "../types";
 import "./ProductDetail.css";
@@ -16,11 +17,22 @@ export default function ProductDetail() {
 
   useEffect(() => {
     async function fetchProduct() {
-      const { data } = await supabase.from("products").select("*").eq("id", id).single();
-      if (data) {
-        setProduct(data);
-        if (data.sizes?.length) setSelectedSize(data.sizes[0]);
-        if (data.colors?.length) setSelectedColor(data.colors[0]);
+      try {
+        const { data } = await supabase.from("products").select("*").eq("id", id).single();
+        if (data) {
+          setProduct(data);
+          if (data.sizes?.length) setSelectedSize(data.sizes[0]);
+          if (data.colors?.length) setSelectedColor(data.colors[0]);
+          return;
+        }
+      } catch {
+        // Supabase not configured, use sample data
+      }
+      const found = SAMPLE_PRODUCTS.find((p) => p.id === id);
+      if (found) {
+        setProduct(found);
+        if (found.sizes?.length) setSelectedSize(found.sizes[0]);
+        if (found.colors?.length) setSelectedColor(found.colors[0]);
       }
     }
     fetchProduct();
