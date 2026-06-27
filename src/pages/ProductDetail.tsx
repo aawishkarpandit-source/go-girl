@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchProductById } from "../lib/supabase";
-import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
+import { getProductById } from "../lib/products";
 import { useCart } from "../context/CartContext";
 import type { Product } from "../types";
 import "./ProductDetail.css";
@@ -16,23 +15,13 @@ export default function ProductDetail() {
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
-    async function load() {
-      if (!id) return;
-      const data = await fetchProductById(id);
-      if (data) {
-        setProduct(data);
-        if (data.sizes?.length) setSelectedSize(data.sizes[0]);
-        if (data.colors?.length) setSelectedColor(data.colors[0]);
-      } else {
-        const found = SAMPLE_PRODUCTS.find((p) => p.id === id);
-        if (found) {
-          setProduct(found);
-          if (found.sizes?.length) setSelectedSize(found.sizes[0]);
-          if (found.colors?.length) setSelectedColor(found.colors[0]);
-        }
-      }
+    if (!id) return;
+    const found = getProductById(id);
+    if (found) {
+      setProduct(found);
+      if (found.sizes?.length) setSelectedSize(found.sizes[0]);
+      if (found.colors?.length) setSelectedColor(found.colors[0]);
     }
-    load();
   }, [id]);
 
   if (!product) {
@@ -54,9 +43,7 @@ export default function ProductDetail() {
   return (
     <div className="product-detail-page">
       <div className="pd-container">
-        <button className="pd-back" onClick={() => navigate(-1)}>
-          ← Back
-        </button>
+        <button className="pd-back" onClick={() => navigate(-1)}>← Back</button>
         <div className="pd-grid">
           <div className="pd-image-section">
             <img src={product.image_url} alt={product.name} className="pd-image" />
