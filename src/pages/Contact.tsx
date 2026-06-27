@@ -6,6 +6,19 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const data = new FormData(form);
+    const msg = {
+      id: `msg-${Date.now()}`,
+      name: data.get("name") as string,
+      email: data.get("email") as string,
+      subject: data.get("subject") as string,
+      message: data.get("message") as string,
+      date: new Date().toISOString(),
+      read: false,
+    };
+    const existing = JSON.parse(localStorage.getItem("gg-admin-messages") || "[]");
+    localStorage.setItem("gg-admin-messages", JSON.stringify([msg, ...existing]));
     setSubmitted(true);
   };
 
@@ -47,19 +60,19 @@ export default function Contact() {
               <form className="contact-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="name">Name</label>
-                  <input type="text" id="name" required />
+                  <input type="text" id="name" name="name" required />
                 </div>
                 <div className="form-group">
                   <label htmlFor="email">Email</label>
-                  <input type="email" id="email" required />
+                  <input type="email" id="email" name="email" required />
                 </div>
                 <div className="form-group">
                   <label htmlFor="subject">Subject</label>
-                  <input type="text" id="subject" required />
+                  <input type="text" id="subject" name="subject" required />
                 </div>
                 <div className="form-group">
                   <label htmlFor="message">Message</label>
-                  <textarea id="message" rows={5} required></textarea>
+                  <textarea id="message" name="message" rows={5} required></textarea>
                 </div>
                 <button type="submit" className="btn btn-primary">
                   Send Message

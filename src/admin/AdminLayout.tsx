@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { path: "/admin", label: "Dashboard", icon: "📊" },
   { path: "/admin/products", label: "Products", icon: "👗" },
   { path: "/admin/orders", label: "Orders", icon: "📦" },
+  { path: "/admin/messages", label: "Messages", icon: "💬" },
 ];
 
 export default function AdminLayout({ children }: Props) {

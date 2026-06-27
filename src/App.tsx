@@ -12,6 +12,7 @@ import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
 import AdminProducts from "./admin/AdminProducts";
 import AdminOrders from "./admin/AdminOrders";
+import AdminMessages from "./admin/AdminMessages";
 import ProtectedRoute from "./admin/ProtectedRoute";
 
 function App() {
@@ -67,6 +68,16 @@ function App() {
           <ProtectedRoute>
             <AdminLayout>
               <AdminOrders />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/messages"
+        element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <AdminMessages />
             </AdminLayout>
           </ProtectedRoute>
         }
