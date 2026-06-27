@@ -177,18 +177,12 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 200;
   padding: 1rem;
-  height: 100%;
-  width: 100%;
 }
 
 .modal {
@@ -500,17 +494,17 @@
 
   /* Modal full width */
   .modal-overlay {
+    position: fixed;
+    inset: 0;
     padding: 0;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
-    height: 100vh;
     height: 100dvh;
   }
 
   .modal {
     max-width: 100%;
-    max-height: 85vh;
     max-height: 85dvh;
     border-radius: 16px 16px 0 0;
     margin: 0;
