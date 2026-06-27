@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { fetchProducts } from "../lib/supabase";
 import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import type { Product } from "../types";
 import ProductCard from "../components/ProductCard";
@@ -20,48 +20,30 @@ export default function Shop() {
   const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
-    async function fetchProducts() {
+    async function load() {
       setLoading(true);
-      try {
-        let query = supabase.from("products").select("*").eq("in_stock", true);
-
-        if (category && CATEGORY_MAP[category]) {
-          query = query.eq("category", CATEGORY_MAP[category]);
-        }
-
-        if (sortBy === "price-low") {
-          query = query.order("price", { ascending: true });
-        } else if (sortBy === "price-high") {
-          query = query.order("price", { ascending: false });
-        } else {
-          query = query.order("created_at", { ascending: false });
-        }
-
-        const { data } = await query;
-        if (data && data.length > 0) {
-          setProducts(data);
-          setLoading(false);
-          return;
-        }
-      } catch {
-        // Supabase not configured, use sample data
-      }
-
-      let filtered = SAMPLE_PRODUCTS.filter((p) => p.in_stock);
-      if (category && CATEGORY_MAP[category]) {
-        filtered = filtered.filter((p) => p.category === CATEGORY_MAP[category]);
-      }
-      if (sortBy === "price-low") {
-        filtered.sort((a, b) => a.price - b.price);
-      } else if (sortBy === "price-high") {
-        filtered.sort((a, b) => b.price - a.price);
+      const sortParam = sortBy === "price-low" ? "price-asc" : sortBy === "price-high" ? "price-desc" : undefined;
+      const categoryParam = category && CATEGORY_MAP[category] ? CATEGORY_MAP[category] : undefined;
+      const data = await fetchProducts(categoryParam, sortParam);
+      if (data && data.length > 0) {
+        setProducts(data);
       } else {
-        filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        let filtered = SAMPLE_PRODUCTS.filter((p) => p.in_stock);
+        if (categoryParam) {
+          filtered = filtered.filter((p) => p.category === categoryParam);
+        }
+        if (sortBy === "price-low") {
+          filtered.sort((a, b) => a.price - b.price);
+        } else if (sortBy === "price-high") {
+          filtered.sort((a, b) => b.price - a.price);
+        } else {
+          filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        }
+        setProducts(filtered);
       }
-      setProducts(filtered);
       setLoading(false);
     }
-    fetchProducts();
+    load();
   }, [category, sortBy]);
 
   return (
@@ -89,7 +71,7 @@ export default function Shop() {
           </div>
         ) : (
           <div className="shop-empty">
-            <p>No products found. Add some products to your Supabase database!</p>
+            <p>No products found.</p>
           </div>
         )}
       </div>

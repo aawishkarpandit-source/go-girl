@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { fetchFeaturedProducts } from "../lib/supabase";
 import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import type { Product } from "../types";
 import ProductCard from "../components/ProductCard";
@@ -17,23 +17,15 @@ export default function Home() {
   const [featured, setFeatured] = useState<Product[]>([]);
 
   useEffect(() => {
-    async function fetchFeatured() {
-      try {
-        const { data } = await supabase
-          .from("products")
-          .select("*")
-          .eq("featured", true)
-          .limit(4);
-        if (data && data.length > 0) {
-          setFeatured(data);
-          return;
-        }
-      } catch {
-        // Supabase not configured, use sample data
+    async function load() {
+      const data = await fetchFeaturedProducts();
+      if (data && data.length > 0) {
+        setFeatured(data);
+      } else {
+        setFeatured(SAMPLE_PRODUCTS.filter((p) => p.featured));
       }
-      setFeatured(SAMPLE_PRODUCTS.filter((p) => p.featured));
     }
-    fetchFeatured();
+    load();
   }, []);
 
   return (
@@ -100,7 +92,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="placeholder-products">
-              <p>Featured products coming soon! Add products in your Supabase database.</p>
+              <p>Featured products coming soon!</p>
             </div>
           )}
         </div>
