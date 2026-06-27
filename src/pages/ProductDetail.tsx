@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { dbGetProductById } from "../lib/api";
 import { getProductById } from "../lib/products";
 import { useCart } from "../context/CartContext";
 import type { Product } from "../types";
@@ -15,13 +16,23 @@ export default function ProductDetail() {
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
-    if (!id) return;
-    const found = getProductById(id);
-    if (found) {
-      setProduct(found);
-      if (found.sizes?.length) setSelectedSize(found.sizes[0]);
-      if (found.colors?.length) setSelectedColor(found.colors[0]);
+    async function load() {
+      if (!id) return;
+      const data = await dbGetProductById(id);
+      if (data) {
+        setProduct(data);
+        if (data.sizes?.length) setSelectedSize(data.sizes[0]);
+        if (data.colors?.length) setSelectedColor(data.colors[0]);
+      } else {
+        const found = getProductById(id);
+        if (found) {
+          setProduct(found);
+          if (found.sizes?.length) setSelectedSize(found.sizes[0]);
+          if (found.colors?.length) setSelectedColor(found.colors[0]);
+        }
+      }
     }
+    load();
   }, [id]);
 
   if (!product) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { dbGetFeatured } from "../lib/api";
 import { getFeaturedProducts } from "../lib/products";
 import type { Product } from "../types";
 import ProductCard from "../components/ProductCard";
@@ -16,7 +17,15 @@ export default function Home() {
   const [featured, setFeatured] = useState<Product[]>([]);
 
   useEffect(() => {
-    setFeatured(getFeaturedProducts());
+    async function load() {
+      const data = await dbGetFeatured();
+      if (data && data.length > 0) {
+        setFeatured(data);
+      } else {
+        setFeatured(getFeaturedProducts());
+      }
+    }
+    load();
   }, []);
 
   return (

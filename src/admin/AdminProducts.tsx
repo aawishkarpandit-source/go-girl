@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
+import { dbGetProducts, dbCreateProduct, dbUpdateProduct, dbDeleteProduct } from "../lib/api";
 import { getStoredProducts, setStoredProducts } from "../lib/products";
 import type { Product } from "../types";
 import "./AdminProducts.css";
@@ -26,14 +27,26 @@ export default function AdminProducts() {
   const [sizesInput, setSizesInput] = useState("");
   const [colorsInput, setColorsInput] = useState("");
   const [search, setSearch] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    let stored = getStoredProducts();
-    if (stored.length === 0) {
-      stored = SAMPLE_PRODUCTS;
-      setStoredProducts(stored);
+    async function load() {
+      // Try fetching from database first
+      const dbProducts = await dbGetProducts();
+      if (dbProducts && dbProducts.length > 0) {
+        setProducts(dbProducts);
+        setStoredProducts(dbProducts); // sync localStorage
+        return;
+      }
+      // Fallback to localStorage
+      let stored = getStoredProducts();
+      if (stored.length === 0) {
+        stored = SAMPLE_PRODUCTS;
+        setStoredProducts(stored);
+      }
+      setProducts(stored);
     }
-    setProducts(stored);
+    load();
   }, []);
 
   const save = (updated: Product[]) => {
@@ -67,25 +80,49 @@ export default function AdminProducts() {
     setShowModal(true);
   };
 
-  const handleSave = () => {
-    const product: Product = {
-      ...form,
-      id: editing?.id || `prod-${Date.now()}`,
-      sizes: sizesInput.split(",").map((s) => s.trim()).filter(Boolean),
-      colors: colorsInput.split(",").map((c) => c.trim()).filter(Boolean),
-      created_at: editing?.created_at || new Date().toISOString(),
-    };
+  const handleSave = async () => {
+    setSaving(true);
+    const sizes = sizesInput.split(",").map((s) => s.trim()).filter(Boolean);
+    const colors = colorsInput.split(",").map((c) => c.trim()).filter(Boolean);
+
     if (editing) {
-      save(products.map((p) => (p.id === editing.id ? product : p)));
+      // Try API first
+      const updated = await dbUpdateProduct(editing.id, { ...form, sizes, colors });
+      if (updated) {
+        const next = products.map((p) => (p.id === editing.id ? updated : p));
+        save(next);
+      } else {
+        // Fallback: update locally
+        const local: Product = { ...form, id: editing.id, sizes, colors, created_at: editing.created_at };
+        save(products.map((p) => (p.id === editing.id ? local : p)));
+      }
     } else {
-      save([product, ...products]);
+      // Try API first
+      const created = await dbCreateProduct({ ...form, sizes, colors });
+      if (created) {
+        save([created, ...products]);
+      } else {
+        // Fallback: create locally
+        const local: Product = {
+          ...form,
+          id: `prod-${Date.now()}`,
+          sizes,
+          colors,
+          created_at: new Date().toISOString(),
+        };
+        save([local, ...products]);
+      }
     }
+    setSaving(false);
     setShowModal(false);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Delete this product?")) return;
+    const ok = await dbDeleteProduct(id);
+    // Always remove locally regardless of API result
     save(products.filter((p) => p.id !== id));
+    void ok;
   };
 
   const filtered = products.filter(
@@ -212,7 +249,9 @@ export default function AdminProducts() {
             </div>
             <div className="modal-footer">
               <button className="btn-cancel" onClick={() => setShowModal(false)}>Cancel</button>
-              <button className="btn-save" onClick={handleSave}>{editing ? "Save Changes" : "Add Product"}</button>
+              <button className="btn-save" onClick={handleSave} disabled={saving}>
+                {saving ? "Saving..." : editing ? "Save Changes" : "Add Product"}
+              </button>
             </div>
           </div>
         </div>
