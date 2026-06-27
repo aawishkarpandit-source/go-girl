@@ -48,13 +48,13 @@ export default function Shop() {
   }, [category, sortBy]);
 
   return (
-    <div className="shop-page">
+    <div className="shop-page page-enter">
       <div className="shop-container">
         <div className="shop-header">
-          <h1>{category ? CATEGORY_MAP[category] || "Shop" : "All Products"}</h1>
-          <div className="shop-controls">
+          <h1 className="anim-fade-left visible">{category ? CATEGORY_MAP[category] || "Shop" : "All Products"}</h1>
+          <div className="shop-controls anim-fade-right visible">
             <label>Sort by:</label>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="hover-border">
               <option value="newest">Newest</option>
               <option value="price-low">Price: Low to High</option>
               <option value="price-high">Price: High to Low</option>
@@ -63,15 +63,24 @@ export default function Shop() {
         </div>
 
         {loading ? (
-          <div className="shop-loading">Loading...</div>
+          <div className="shop-loading">
+            <div className="spinner"></div>
+            <p>Loading products...</p>
+          </div>
         ) : products.length > 0 ? (
           <div className="shop-grid">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {products.map((product, i) => (
+              <div
+                key={product.id}
+                className={`anim-fade-up visible`}
+                style={{ animationDelay: `${i * 0.08}s` }}
+              >
+                <ProductCard product={product} />
+              </div>
             ))}
           </div>
         ) : (
-          <div className="shop-empty">
+          <div className="shop-empty anim-scale visible">
             <p>No products found.</p>
           </div>
         )}

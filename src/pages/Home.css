@@ -12,11 +12,23 @@
   margin: 0 auto;
   padding: 4rem 2rem;
   gap: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  animation: meshGradient 12s ease infinite;
+  pointer-events: none;
 }
 
 .hero-content {
   flex: 1;
   max-width: 560px;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-tag {
@@ -29,6 +41,7 @@
   font-weight: 600;
   letter-spacing: 0.5px;
   margin-bottom: 1.5rem;
+  animation: pulseGlow 2s ease-in-out infinite 2s;
 }
 
 .hero-title {
@@ -37,13 +50,22 @@
   line-height: 1.15;
   color: #1a1a2e;
   margin: 0 0 1.5rem;
+  position: relative;
 }
 
 .hero-title .highlight {
-  background: linear-gradient(135deg, #e91e8c, #ff6bb5);
+  background: linear-gradient(135deg, #e91e8c, #a855f7, #6366f1);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradientFlow 3s ease infinite;
+}
+
+.hero-cursor {
+  color: #e91e8c;
+  font-weight: 300;
+  margin-left: 2px;
 }
 
 .hero-description {
@@ -64,10 +86,11 @@
   font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   border: 2px solid transparent;
   cursor: pointer;
   display: inline-block;
+  position: relative;
 }
 
 .btn-primary {
@@ -76,8 +99,8 @@
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(233, 30, 140, 0.3);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(233, 30, 140, 0.4);
 }
 
 .btn-outline {
@@ -89,14 +112,18 @@
 .btn-outline:hover {
   background: #e91e8c;
   color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(233, 30, 140, 0.3);
 }
 
+/* Hero Visual */
 .hero-visual {
   flex: 1;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 .hero-shape {
@@ -106,16 +133,31 @@
   background: linear-gradient(135deg, #ffd6e8, #ff6bb5);
   opacity: 0.3;
   position: absolute;
+  will-change: transform;
 }
 
 .hero-shape.shape-2 {
   width: 300px;
   height: 300px;
-  background: linear-gradient(135deg, #e91e8c, #ff6bb5);
+  background: linear-gradient(135deg, #e91e8c, #a855f7);
   opacity: 0.2;
   top: 60px;
   left: 60px;
 }
+
+.hero-particle {
+  position: absolute;
+  font-size: 1.2rem;
+  color: #e91e8c;
+  opacity: 0.4;
+  animation: particleFloat 6s ease-in-out infinite;
+}
+
+.hero-particle.p1 { top: 15%; right: 20%; animation-delay: 0s; color: #ff6bb5; }
+.hero-particle.p2 { top: 60%; left: 10%; animation-delay: 1s; color: #a855f7; font-size: 0.8rem; }
+.hero-particle.p3 { top: 30%; right: 5%; animation-delay: 2s; color: #6366f1; font-size: 1rem; }
+.hero-particle.p4 { bottom: 20%; right: 30%; animation-delay: 3s; color: #e91e8c; font-size: 1.4rem; }
+.hero-particle.p5 { top: 45%; left: 25%; animation-delay: 4s; color: #ff6bb5; font-size: 0.6rem; }
 
 /* Sections */
 .section-container {
@@ -167,18 +209,23 @@
   text-decoration: none;
   color: #1a1a2e;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .category-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(233, 30, 140, 0.1);
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 20px 60px rgba(233, 30, 140, 0.15);
 }
 
 .category-emoji {
   font-size: 3rem;
   display: block;
   margin-bottom: 1rem;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.category-card:hover .category-emoji {
+  transform: scale(1.3) rotate(-10deg);
 }
 
 .category-card h3 {
@@ -210,12 +257,25 @@
 .cta-section {
   padding: 5rem 0;
   background: linear-gradient(135deg, #1a1a2e, #2d1b4e);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(233, 30, 140, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 50%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+  animation: meshGradient 8s ease infinite;
 }
 
 .cta-content {
   text-align: center;
   max-width: 500px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .cta-content h2 {
@@ -244,6 +304,11 @@
   font-size: 0.95rem;
   width: 280px;
   outline: none;
+  transition: all 0.3s;
+}
+
+.cta-form input:focus {
+  box-shadow: 0 0 20px rgba(233, 30, 140, 0.3);
 }
 
 .cta-form button {
@@ -254,12 +319,13 @@
   border-radius: 0 50px 50px 0;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.3s;
+  transition: all 0.3s;
   font-size: 0.95rem;
 }
 
 .cta-form button:hover {
   opacity: 0.9;
+  transform: scale(1.05);
 }
 
 @media (max-width: 768px) {

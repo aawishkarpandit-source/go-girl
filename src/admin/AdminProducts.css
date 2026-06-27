@@ -76,8 +76,13 @@
   vertical-align: middle;
 }
 
+.products-table tbody tr {
+  transition: all 0.3s;
+}
+
 .products-table tbody tr:hover {
   background: #fafbfc;
+  transform: scale(1.01);
 }
 
 .product-cell {

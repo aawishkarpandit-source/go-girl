@@ -13,8 +13,8 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
-          <span className="logo-icon">GG</span>
+        <Link to="/" className="navbar-logo hover-scale">
+          <span className="logo-icon animate-pulse-glow">GG</span>
           <span className="logo-text">
             Go Girl <span className="logo-sub">Fashion</span>
           </span>
@@ -31,50 +31,30 @@ export default function Navbar() {
         </button>
 
         <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
-          <li>
-            <Link
-              to="/"
-              className={isActive("/") ? "active" : ""}
-              onClick={() => setMenuOpen(false)}
-            >
+          <li style={{ animation: "fadeInDown 0.3s ease 0.1s both" }}>
+            <Link to="/" className={isActive("/") ? "active" : ""} onClick={() => setMenuOpen(false)}>
               Home
             </Link>
           </li>
-          <li>
-            <Link
-              to="/shop"
-              className={isActive("/shop") ? "active" : ""}
-              onClick={() => setMenuOpen(false)}
-            >
+          <li style={{ animation: "fadeInDown 0.3s ease 0.15s both" }}>
+            <Link to="/shop" className={isActive("/shop") ? "active" : ""} onClick={() => setMenuOpen(false)}>
               Shop
             </Link>
           </li>
-          <li>
-            <Link
-              to="/about"
-              className={isActive("/about") ? "active" : ""}
-              onClick={() => setMenuOpen(false)}
-            >
+          <li style={{ animation: "fadeInDown 0.3s ease 0.2s both" }}>
+            <Link to="/about" className={isActive("/about") ? "active" : ""} onClick={() => setMenuOpen(false)}>
               About
             </Link>
           </li>
-          <li>
-            <Link
-              to="/contact"
-              className={isActive("/contact") ? "active" : ""}
-              onClick={() => setMenuOpen(false)}
-            >
+          <li style={{ animation: "fadeInDown 0.3s ease 0.25s both" }}>
+            <Link to="/contact" className={isActive("/contact") ? "active" : ""} onClick={() => setMenuOpen(false)}>
               Contact
             </Link>
           </li>
-          <li>
-            <Link
-              to="/cart"
-              className={`cart-link ${isActive("/cart") ? "active" : ""}`}
-              onClick={() => setMenuOpen(false)}
-            >
+          <li style={{ animation: "fadeInDown 0.3s ease 0.3s both" }}>
+            <Link to="/cart" className={`cart-link ${isActive("/cart") ? "active" : ""}`} onClick={() => setMenuOpen(false)}>
               Cart
-              {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
+              {totalItems > 0 && <span className="cart-badge animate-bounce-in">{totalItems}</span>}
             </Link>
           </li>
         </ul>

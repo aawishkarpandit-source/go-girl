@@ -132,26 +132,26 @@ export default function AdminProducts() {
   );
 
   return (
-    <div className="admin-products">
+    <div className="admin-products page-enter">
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-page-title">Products</h1>
-          <p className="admin-page-sub">{products.length} products total</p>
+          <h1 className="admin-page-title anim-fade-up visible">Products</h1>
+          <p className="admin-page-sub anim-fade-up stagger-1 visible">{products.length} products total</p>
         </div>
-        <button className="btn-add" onClick={openAdd}>+ Add Product</button>
+        <button className="btn-add btn-ripple btn-shine" onClick={openAdd}>+ Add Product</button>
       </div>
 
-      <div className="products-toolbar">
+      <div className="products-toolbar anim-fade-up stagger-2 visible">
         <input
           type="text"
           placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="search-input"
+          className="search-input hover-border"
         />
       </div>
 
-      <div className="products-table-wrap">
+      <div className="products-table-wrap anim-fade-up stagger-3 visible">
         <table className="products-table">
           <thead>
             <tr>
@@ -195,8 +195,8 @@ export default function AdminProducts() {
       </div>
 
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay anim-fade visible" onClick={() => setShowModal(false)}>
+          <div className="modal modal-enter" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>{editing ? "Edit Product" : "Add Product"}</h2>
               <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>

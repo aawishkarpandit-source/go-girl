@@ -17,6 +17,7 @@
   cursor: pointer;
   margin-bottom: 2rem;
   padding: 0;
+  display: inline-block;
 }
 
 .pd-back:hover {
@@ -34,6 +35,11 @@
   border-radius: 16px;
   object-fit: cover;
   aspect-ratio: 3 / 4;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pd-image:hover {
+  transform: scale(1.03);
 }
 
 .pd-category {
@@ -87,7 +93,7 @@
   border-radius: 8px;
   background: white;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   font-size: 0.9rem;
 }
 
@@ -95,10 +101,12 @@
   border-color: #e91e8c;
   color: #e91e8c;
   background: rgba(233, 30, 140, 0.05);
+  transform: scale(1.05);
 }
 
 .pd-option-btn:hover {
   border-color: #e91e8c;
+  transform: translateY(-2px);
 }
 
 .pd-add-btn {
@@ -111,23 +119,18 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   margin-top: 1rem;
 }
 
 .pd-add-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(233, 30, 140, 0.3);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(233, 30, 140, 0.4);
 }
 
 .pd-add-btn.added {
-  background: #27ae60;
-}
-
-.pd-loading {
-  text-align: center;
-  padding: 4rem;
-  color: #999;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  animation: bounceIn 0.5s ease;
 }
 
 @media (max-width: 768px) {

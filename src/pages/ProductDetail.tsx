@@ -39,7 +39,10 @@ export default function ProductDetail() {
     return (
       <div className="product-detail-page">
         <div className="pd-container">
-          <p className="pd-loading">Loading...</p>
+          <div className="shop-loading">
+            <div className="spinner"></div>
+            <p>Loading product...</p>
+          </div>
         </div>
       </div>
     );
@@ -52,27 +55,27 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="product-detail-page">
+    <div className="product-detail-page page-enter">
       <div className="pd-container">
-        <button className="pd-back" onClick={() => navigate(-1)}>← Back</button>
+        <button className="pd-back hover-wobble" onClick={() => navigate(-1)}>← Back</button>
         <div className="pd-grid">
-          <div className="pd-image-section">
+          <div className="pd-image-section anim-fade-left visible">
             <img src={product.image_url} alt={product.name} className="pd-image" />
           </div>
           <div className="pd-info">
-            <span className="pd-category">{product.category}</span>
-            <h1 className="pd-name">{product.name}</h1>
-            <p className="pd-price">${product.price.toFixed(2)}</p>
-            <p className="pd-description">{product.description}</p>
+            <span className="pd-category anim-fade-right visible" style={{ animationDelay: "0.1s" }}>{product.category}</span>
+            <h1 className="pd-name anim-fade-right visible" style={{ animationDelay: "0.2s" }}>{product.name}</h1>
+            <p className="pd-price anim-fade-right visible" style={{ animationDelay: "0.3s" }}>${product.price.toFixed(2)}</p>
+            <p className="pd-description anim-fade-right visible" style={{ animationDelay: "0.4s" }}>{product.description}</p>
 
             {product.sizes?.length > 0 && (
-              <div className="pd-option">
+              <div className="pd-option anim-fade-up visible" style={{ animationDelay: "0.5s" }}>
                 <label>Size</label>
                 <div className="pd-options-row">
                   {product.sizes.map((size) => (
                     <button
                       key={size}
-                      className={`pd-option-btn ${selectedSize === size ? "active" : ""}`}
+                      className={`pd-option-btn hover-jelly ${selectedSize === size ? "active" : ""}`}
                       onClick={() => setSelectedSize(size)}
                     >
                       {size}
@@ -83,13 +86,13 @@ export default function ProductDetail() {
             )}
 
             {product.colors?.length > 0 && (
-              <div className="pd-option">
+              <div className="pd-option anim-fade-up visible" style={{ animationDelay: "0.6s" }}>
                 <label>Color</label>
                 <div className="pd-options-row">
                   {product.colors.map((color) => (
                     <button
                       key={color}
-                      className={`pd-option-btn ${selectedColor === color ? "active" : ""}`}
+                      className={`pd-option-btn hover-jelly ${selectedColor === color ? "active" : ""}`}
                       onClick={() => setSelectedColor(color)}
                     >
                       {color}
@@ -100,10 +103,11 @@ export default function ProductDetail() {
             )}
 
             <button
-              className={`pd-add-btn ${added ? "added" : ""}`}
+              className={`pd-add-btn btn-ripple btn-shine anim-fade-up visible ${added ? "added" : ""}`}
+              style={{ animationDelay: "0.7s" }}
               onClick={handleAddToCart}
             >
-              {added ? "Added to Cart!" : "Add to Cart"}
+              {added ? "✓ Added to Cart!" : "Add to Cart"}
             </button>
           </div>
         </div>

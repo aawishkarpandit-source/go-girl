@@ -75,11 +75,11 @@ export default function AdminOrders() {
   );
 
   return (
-    <div className="admin-orders">
-      <h1 className="admin-page-title">Orders</h1>
-      <p className="admin-page-sub">{orders.length} orders total</p>
+    <div className="admin-orders page-enter">
+      <h1 className="admin-page-title anim-fade-up visible">Orders</h1>
+      <p className="admin-page-sub anim-fade-up stagger-1 visible">{orders.length} orders total</p>
 
-      <div className="order-filters">
+      <div className="order-filters anim-fade-up stagger-2 visible">
         {["all", ...STATUS_OPTIONS].map((s) => (
           <button
             key={s}
@@ -94,10 +94,10 @@ export default function AdminOrders() {
 
       <div className="orders-list">
         {filtered.length === 0 ? (
-          <div className="orders-empty">No orders found.</div>
+          <div className="orders-empty anim-scale visible">No orders found.</div>
         ) : (
-          filtered.map((order) => (
-            <div key={order.id} className="order-card">
+          filtered.map((order, i) => (
+            <div key={order.id} className="order-card anim-fade-up visible hover-lift" style={{ animationDelay: `${i * 0.08}s` }}>
               <div className="order-header">
                 <div>
                   <span className="order-id">#{order.id}</span>
