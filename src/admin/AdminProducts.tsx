@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import { dbGetProducts, dbCreateProduct, dbUpdateProduct, dbDeleteProduct } from "../lib/api";
 import { getStoredProducts, setStoredProducts } from "../lib/products";
 import type { Product } from "../types";
@@ -31,19 +30,13 @@ export default function AdminProducts() {
 
   useEffect(() => {
     async function load() {
-      // Try fetching from database first
       const dbProducts = await dbGetProducts();
       if (dbProducts && dbProducts.length > 0) {
         setProducts(dbProducts);
-        setStoredProducts(dbProducts); // sync localStorage
+        setStoredProducts(dbProducts);
         return;
       }
-      // Fallback to localStorage
-      let stored = getStoredProducts();
-      if (stored.length === 0) {
-        stored = SAMPLE_PRODUCTS;
-        setStoredProducts(stored);
-      }
+      const stored = getStoredProducts();
       setProducts(stored);
     }
     load();

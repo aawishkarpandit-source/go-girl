@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { dbGetProducts } from "../lib/api";
-import { getStoredProducts, setStoredProducts } from "../lib/products";
-import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import type { Product } from "../types";
 import ProductCard from "../components/ProductCard";
 import "./Shop.css";
@@ -27,27 +25,7 @@ export default function Shop() {
       const sortParam = sortBy === "price-low" ? "price-asc" : sortBy === "price-high" ? "price-desc" : undefined;
 
       const data = await dbGetProducts(categoryParam, sortParam);
-      if (data && data.length > 0) {
-        setProducts(data);
-      } else {
-        let stored = getStoredProducts();
-        if (stored.length === 0) {
-          stored = SAMPLE_PRODUCTS;
-          setStoredProducts(stored);
-        }
-        let filtered = stored.filter((p) => p.in_stock);
-        if (categoryParam) {
-          filtered = filtered.filter((p) => p.category === categoryParam);
-        }
-        if (sortBy === "price-low") {
-          filtered.sort((a, b) => a.price - b.price);
-        } else if (sortBy === "price-high") {
-          filtered.sort((a, b) => b.price - a.price);
-        } else {
-          filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        }
-        setProducts(filtered);
-      }
+      setProducts(data || []);
       setLoading(false);
     }
     load();
