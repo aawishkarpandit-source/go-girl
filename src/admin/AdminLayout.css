@@ -169,6 +169,11 @@
   padding: 2rem;
 }
 
+/* Sidebar overlay */
+.sidebar-overlay {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .admin-sidebar {
     transform: translateX(-100%);
@@ -190,7 +195,27 @@
     display: block;
   }
 
+  .admin-header {
+    padding: 0 1rem;
+  }
+
   .admin-content {
     padding: 1rem;
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 99;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .sidebar-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
   }
 }

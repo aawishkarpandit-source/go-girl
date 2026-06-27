@@ -65,7 +65,7 @@ export default function AdminMessages() {
         </div>
       ) : (
         <div className="messages-layout">
-          <div className="messages-list">
+          <div className={`messages-list ${selected ? "hidden-mobile" : ""}`}>
             {messages.map((msg) => (
               <div
                 key={msg.id}
@@ -82,9 +82,12 @@ export default function AdminMessages() {
             ))}
           </div>
 
-          <div className="message-detail">
+          <div className={`message-detail ${!selected ? "hidden-mobile" : ""}`}>
             {selected ? (
               <>
+                <button className="messages-back" onClick={() => setSelected(null)}>
+                  ← Back
+                </button>
                 <div className="detail-header">
                   <div>
                     <h2 className="detail-subject">{selected.subject}</h2>

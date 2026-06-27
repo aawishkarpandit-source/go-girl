@@ -25,6 +25,10 @@ export default function AdminLayout({ children }: Props) {
 
   return (
     <div className="admin-layout">
+      <div
+        className={`sidebar-overlay ${sidebarOpen ? "visible" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+      />
       <aside className={`admin-sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
           <Link to="/admin" className="sidebar-logo">

@@ -160,22 +160,22 @@ export default function AdminProducts() {
           <tbody>
             {filtered.map((p) => (
               <tr key={p.id}>
-                <td>
+                <td data-label="Product">
                   <div className="product-cell">
                     <img src={p.image_url} alt={p.name} className="product-thumb" />
                     <span className="product-cell-name">{p.name}</span>
                   </div>
                 </td>
-                <td><span className="category-badge">{p.category}</span></td>
-                <td className="price-cell">${p.price.toFixed(2)}</td>
-                <td><span className="sizes-text">{p.sizes.join(", ")}</span></td>
-                <td>
+                <td data-label="Category"><span className="category-badge">{p.category}</span></td>
+                <td data-label="Price" className="price-cell">${p.price.toFixed(2)}</td>
+                <td data-label="Sizes"><span className="sizes-text">{p.sizes.join(", ")}</span></td>
+                <td data-label="Stock">
                   <span className={`stock-badge ${p.in_stock ? "in" : "out"}`}>
                     {p.in_stock ? "In Stock" : "Out"}
                   </span>
                 </td>
-                <td>{p.featured ? "⭐" : ""}</td>
-                <td>
+                <td data-label="Featured">{p.featured ? "⭐" : ""}</td>
+                <td data-label="">
                   <div className="action-btns">
                     <button className="btn-edit" onClick={() => openEdit(p)}>Edit</button>
                     <button className="btn-delete" onClick={() => handleDelete(p.id)}>Delete</button>
