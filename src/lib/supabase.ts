@@ -1,30 +1,29 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+let clientInstance: any = null;
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-let supabaseInstance: SupabaseClient | null = null;
-
-function getSupabase(): SupabaseClient | null {
-  if (supabaseInstance) return supabaseInstance;
-  if (supabaseUrl && supabaseAnonKey) {
-    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+async function getClient(): Promise<any | null> {
+  if (clientInstance) return clientInstance;
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  try {
+    const { createClient } = await import("@supabase/supabase-js");
+    clientInstance = createClient(url, key);
+    return clientInstance;
+  } catch {
+    return null;
   }
-  return supabaseInstance;
 }
 
-// Helper that returns null if Supabase isn't configured
 export async function fetchProducts(category?: string, sort?: string) {
-  const client = getSupabase();
+  const client = await getClient();
   if (!client) return null;
-
   try {
     let query = client.from("products").select("*").eq("in_stock", true);
     if (category) query = query.eq("category", category);
     if (sort === "price-asc") query = query.order("price", { ascending: true });
     else if (sort === "price-desc") query = query.order("price", { ascending: false });
     else query = query.order("created_at", { ascending: false });
-
     const { data, error } = await query;
     if (error) throw error;
     return data;
@@ -34,9 +33,8 @@ export async function fetchProducts(category?: string, sort?: string) {
 }
 
 export async function fetchFeaturedProducts() {
-  const client = getSupabase();
+  const client = await getClient();
   if (!client) return null;
-
   try {
     const { data, error } = await client
       .from("products")
@@ -51,9 +49,8 @@ export async function fetchFeaturedProducts() {
 }
 
 export async function fetchProductById(id: string) {
-  const client = getSupabase();
+  const client = await getClient();
   if (!client) return null;
-
   try {
     const { data, error } = await client.from("products").select("*").eq("id", id).single();
     if (error) throw error;
@@ -62,6 +59,3 @@ export async function fetchProductById(id: string) {
     return null;
   }
 }
-
-// Keep a default export for backward compat, but it may be null
-export const supabase = getSupabase();
