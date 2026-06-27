@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { SAMPLE_PRODUCTS } from "../data/sampleProducts";
 import type { Product } from "../types";
+import { formatPrice } from "../lib/format";
 import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
@@ -11,8 +11,6 @@ export default function AdminDashboard() {
     const stored = localStorage.getItem("gg-admin-products");
     if (stored) {
       setProducts(JSON.parse(stored));
-    } else {
-      setProducts(SAMPLE_PRODUCTS);
     }
     const storedOrders = localStorage.getItem("gg-admin-orders");
     if (storedOrders) {
@@ -46,7 +44,7 @@ export default function AdminDashboard() {
         <div className="stat-card anim-scale visible stagger-3 hover-lift">
           <div className="stat-icon" style={{ background: "rgba(16,185,129,0.1)", color: "#10b981" }}>💰</div>
           <div>
-            <p className="stat-value">${totalRevenue.toFixed(2)}</p>
+            <p className="stat-value">{formatPrice(totalRevenue)}</p>
             <p className="stat-label">Revenue</p>
           </div>
         </div>
@@ -68,7 +66,7 @@ export default function AdminDashboard() {
                 <img src={p.image_url} alt={p.name} className="dash-list-img" />
                 <div>
                   <p className="dash-list-name">{p.name}</p>
-                  <p className="dash-list-meta">${p.price.toFixed(2)} · {p.category}</p>
+                  <p className="dash-list-meta">{formatPrice(p.price)} · {p.category}</p>
                 </div>
               </div>
             ))}

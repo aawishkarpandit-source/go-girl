@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { formatPrice } from "../lib/format";
 import "./Cart.css";
 
 export default function Cart() {
@@ -42,7 +43,7 @@ export default function Cart() {
                   <p className="cart-item-meta">
                     Size: {item.selectedSize} | Color: {item.selectedColor}
                   </p>
-                  <p className="cart-item-price">${item.product.price.toFixed(2)}</p>
+                  <p className="cart-item-price">{formatPrice(item.product.price)}</p>
                 </div>
                 <div className="cart-item-actions">
                   <div className="quantity-control">
@@ -78,7 +79,7 @@ export default function Cart() {
             <h2>Order Summary</h2>
             <div className="summary-row">
               <span>Subtotal</span>
-              <span>${totalPrice.toFixed(2)}</span>
+              <span>{formatPrice(totalPrice)}</span>
             </div>
             <div className="summary-row">
               <span>Shipping</span>
@@ -86,7 +87,7 @@ export default function Cart() {
             </div>
             <div className="summary-row total">
               <span>Total</span>
-              <span>${totalPrice.toFixed(2)}</span>
+              <span>{formatPrice(totalPrice)}</span>
             </div>
             <button className="btn btn-primary btn-ripple btn-shine checkout-btn">Proceed to Checkout</button>
             <button className="clear-cart-btn hover-shake" onClick={clearCart}>Clear Cart</button>

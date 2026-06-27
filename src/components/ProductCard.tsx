@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Product } from "../types";
+import { formatPrice } from "../lib/format";
 import "./ProductCard.css";
 
 interface Props {
@@ -19,7 +20,7 @@ export default function ProductCard({ product }: Props) {
       <div className="product-info">
         <span className="product-category animate-color-cycle">{product.category}</span>
         <h3 className="product-name">{product.name}</h3>
-        <p className="product-price">${product.price.toFixed(2)}</p>
+        <p className="product-price">{formatPrice(product.price)}</p>
       </div>
     </Link>
   );

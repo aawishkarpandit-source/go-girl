@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { formatPrice } from "../lib/format";
 import "./AdminOrders.css";
 
 interface Order {
@@ -10,41 +11,6 @@ interface Order {
   date: string;
 }
 
-const SAMPLE_ORDERS: Order[] = [
-  {
-    id: "ord-001",
-    email: "sarah@example.com",
-    items: [
-      { name: "Floral Summer Dress", quantity: 1, price: 49.99 },
-      { name: "Pearl Drop Earrings", quantity: 2, price: 28.0 },
-    ],
-    total: 105.99,
-    status: "delivered",
-    date: "2026-06-20",
-  },
-  {
-    id: "ord-002",
-    email: "maya@example.com",
-    items: [
-      { name: "Classic Denim Jacket", quantity: 1, price: 65.0 },
-    ],
-    total: 65.0,
-    status: "shipped",
-    date: "2026-06-22",
-  },
-  {
-    id: "ord-003",
-    email: "lily@example.com",
-    items: [
-      { name: "Silk Wrap Dress", quantity: 1, price: 78.0 },
-      { name: "Leather Crossbody Bag", quantity: 1, price: 45.0 },
-    ],
-    total: 123.0,
-    status: "pending",
-    date: "2026-06-25",
-  },
-];
-
 const STATUS_OPTIONS = ["pending", "shipped", "delivered", "cancelled"];
 
 export default function AdminOrders() {
@@ -55,9 +21,6 @@ export default function AdminOrders() {
     const stored = localStorage.getItem("gg-admin-orders");
     if (stored) {
       setOrders(JSON.parse(stored));
-    } else {
-      setOrders(SAMPLE_ORDERS);
-      localStorage.setItem("gg-admin-orders", JSON.stringify(SAMPLE_ORDERS));
     }
   }, []);
 
@@ -104,7 +67,7 @@ export default function AdminOrders() {
                   <span className="order-date">{order.date}</span>
                 </div>
                 <div className="order-header-right">
-                  <span className="order-total">${order.total.toFixed(2)}</span>
+                  <span className="order-total">{formatPrice(order.total)}</span>
                   <select
                     className={`status-select status-${order.status}`}
                     value={order.status}
@@ -121,7 +84,7 @@ export default function AdminOrders() {
                 {order.items.map((item, i) => (
                   <div key={i} className="order-item">
                     <span>{item.name} × {item.quantity}</span>
-                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                    <span>{formatPrice(item.price * item.quantity)}</span>
                   </div>
                 ))}
               </div>

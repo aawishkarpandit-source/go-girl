@@ -303,6 +303,96 @@
   cursor: pointer;
 }
 
+/* Image Upload */
+.image-upload-area {
+  border: 2px dashed #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #f8fafc;
+}
+
+.image-upload-area:hover {
+  border-color: #e91e8c;
+  background: #fdf2f8;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  color: #94a3b8;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.upload-hint {
+  font-size: 0.75rem;
+  margin: 0.25rem 0 0;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.image-url-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0.5rem 0 0.3rem;
+}
+
+.url-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.url-input:focus {
+  border-color: #e91e8c;
+}
+
+/* Category Chips */
+.category-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category-chip {
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.category-chip:hover {
+  border-color: #e91e8c;
+}
+
+.category-chip.active {
+  background: linear-gradient(135deg, #e91e8c, #ff6bb5);
+  color: white;
+  border-color: transparent;
+}
+
 /* Mobile card layout */
 .product-cards {
   display: none;

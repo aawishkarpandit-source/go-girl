@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { dbGetProductById } from "../lib/api";
 import { useCart } from "../context/CartContext";
+import { formatPrice } from "../lib/format";
 import type { Product } from "../types";
 import "./ProductDetail.css";
 
@@ -57,7 +58,7 @@ export default function ProductDetail() {
           <div className="pd-info">
             <span className="pd-category anim-fade-right visible" style={{ animationDelay: "0.1s" }}>{product.category}</span>
             <h1 className="pd-name anim-fade-right visible" style={{ animationDelay: "0.2s" }}>{product.name}</h1>
-            <p className="pd-price anim-fade-right visible" style={{ animationDelay: "0.3s" }}>${product.price.toFixed(2)}</p>
+            <p className="pd-price anim-fade-right visible" style={{ animationDelay: "0.3s" }}>{formatPrice(product.price)}</p>
             <p className="pd-description anim-fade-right visible" style={{ animationDelay: "0.4s" }}>{product.description}</p>
 
             {product.sizes?.length > 0 && (

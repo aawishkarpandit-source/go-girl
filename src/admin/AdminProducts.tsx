@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { dbGetProducts, dbCreateProduct, dbUpdateProduct, dbDeleteProduct } from "../lib/api";
 import { getStoredProducts, setStoredProducts } from "../lib/products";
+import { formatPrice } from "../lib/format";
 import type { Product } from "../types";
 import "./AdminProducts.css";
 
@@ -27,6 +28,8 @@ export default function AdminProducts() {
   const [colorsInput, setColorsInput] = useState("");
   const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
+  const [imagePreview, setImagePreview] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     async function load() {
@@ -52,6 +55,7 @@ export default function AdminProducts() {
     setForm(EMPTY_PRODUCT);
     setSizesInput("S, M, L");
     setColorsInput("Black");
+    setImagePreview("");
     setShowModal(true);
   };
 
@@ -70,7 +74,26 @@ export default function AdminProducts() {
     });
     setSizesInput(p.sizes.join(", "));
     setColorsInput(p.colors.join(", "));
+    setImagePreview(p.image_url);
     setShowModal(true);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 500 * 1024) {
+      alert("Image must be under 500KB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setImagePreview(result);
+      setForm({ ...form, image_url: result });
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSave = async () => {
@@ -79,23 +102,18 @@ export default function AdminProducts() {
     const colors = colorsInput.split(",").map((c) => c.trim()).filter(Boolean);
 
     if (editing) {
-      // Try API first
       const updated = await dbUpdateProduct(editing.id, { ...form, sizes, colors });
       if (updated) {
-        const next = products.map((p) => (p.id === editing.id ? updated : p));
-        save(next);
+        save(products.map((p) => (p.id === editing.id ? updated : p)));
       } else {
-        // Fallback: update locally
         const local: Product = { ...form, id: editing.id, sizes, colors, created_at: editing.created_at };
         save(products.map((p) => (p.id === editing.id ? local : p)));
       }
     } else {
-      // Try API first
       const created = await dbCreateProduct({ ...form, sizes, colors });
       if (created) {
         save([created, ...products]);
       } else {
-        // Fallback: create locally
         const local: Product = {
           ...form,
           id: `prod-${Date.now()}`,
@@ -113,7 +131,6 @@ export default function AdminProducts() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this product?")) return;
     const ok = await dbDeleteProduct(id);
-    // Always remove locally regardless of API result
     save(products.filter((p) => p.id !== id));
     void ok;
   };
@@ -167,7 +184,7 @@ export default function AdminProducts() {
                   </div>
                 </td>
                 <td data-label="Category"><span className="category-badge">{p.category}</span></td>
-                <td data-label="Price" className="price-cell">${p.price.toFixed(2)}</td>
+                <td data-label="Price" className="price-cell">{formatPrice(p.price)}</td>
                 <td data-label="Sizes"><span className="sizes-text">{p.sizes.join(", ")}</span></td>
                 <td data-label="Stock">
                   <span className={`stock-badge ${p.in_stock ? "in" : "out"}`}>
@@ -195,47 +212,133 @@ export default function AdminProducts() {
               <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
             </div>
             <div className="modal-body">
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Name</label>
-                  <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              {/* Image Upload */}
+              <div className="form-group">
+                <label>Product Image</label>
+                <div
+                  className="image-upload-area"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {imagePreview ? (
+                    <img src={imagePreview} alt="Preview" className="image-preview" />
+                  ) : (
+                    <div className="image-placeholder">
+                      <span className="upload-icon">📷</span>
+                      <p>Click to upload image</p>
+                      <p className="upload-hint">Max 500KB (JPG, PNG)</p>
+                    </div>
+                  )}
                 </div>
-                <div className="form-group">
-                  <label>Price</label>
-                  <input type="number" step="0.01" value={form.price} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) || 0 })} />
-                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden-file-input"
+                />
+                <p className="image-url-hint">Or paste image URL below:</p>
+                <input
+                  value={imagePreview.startsWith("data:") ? "" : form.image_url}
+                  onChange={(e) => {
+                    setForm({ ...form, image_url: e.target.value });
+                    setImagePreview(e.target.value);
+                  }}
+                  placeholder="https://example.com/image.jpg"
+                  className="url-input"
+                />
               </div>
+
+              {/* Name */}
+              <div className="form-group">
+                <label>Product Name</label>
+                <input
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="e.g. Floral Summer Dress"
+                />
+              </div>
+
+              {/* Price */}
+              <div className="form-group">
+                <label>Price (NRS)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={form.price || ""}
+                  onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) || 0 })}
+                  placeholder="0.00"
+                />
+              </div>
+
+              {/* Description */}
               <div className="form-group">
                 <label>Description</label>
-                <textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                <textarea
+                  rows={3}
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  placeholder="Describe the product..."
+                />
               </div>
+
+              {/* Category */}
               <div className="form-group">
-                <label>Image URL</label>
-                <input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+                <label>Category</label>
+                <div className="category-chips">
+                  {CATEGORIES.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      className={`category-chip ${form.category === c ? "active" : ""}`}
+                      onClick={() => setForm({ ...form, category: c })}
+                    >
+                      {c === "Dresses" && "👗 "}
+                      {c === "Tops" && "👚 "}
+                      {c === "Bottoms" && "👖 "}
+                      {c === "Accessories" && "👜 "}
+                      {c}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Category</label>
-                  <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
-                    {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Sizes (comma separated)</label>
-                  <input value={sizesInput} onChange={(e) => setSizesInput(e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Colors (comma separated)</label>
-                  <input value={colorsInput} onChange={(e) => setColorsInput(e.target.value)} />
-                </div>
+
+              {/* Sizes */}
+              <div className="form-group">
+                <label>Sizes</label>
+                <input
+                  value={sizesInput}
+                  onChange={(e) => setSizesInput(e.target.value)}
+                  placeholder="S, M, L, XL"
+                />
               </div>
+
+              {/* Colors */}
+              <div className="form-group">
+                <label>Colors</label>
+                <input
+                  value={colorsInput}
+                  onChange={(e) => setColorsInput(e.target.value)}
+                  placeholder="Black, White, Pink"
+                />
+              </div>
+
+              {/* Toggles */}
               <div className="form-row checks">
                 <label className="check-label">
-                  <input type="checkbox" checked={form.in_stock} onChange={(e) => setForm({ ...form, in_stock: e.target.checked })} />
+                  <input
+                    type="checkbox"
+                    checked={form.in_stock}
+                    onChange={(e) => setForm({ ...form, in_stock: e.target.checked })}
+                  />
                   In Stock
                 </label>
                 <label className="check-label">
-                  <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} />
+                  <input
+                    type="checkbox"
+                    checked={form.featured}
+                    onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                  />
                   Featured
                 </label>
               </div>
