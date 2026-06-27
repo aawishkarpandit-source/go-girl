@@ -138,9 +138,11 @@
   border: none;
   cursor: pointer;
   padding: 8px;
+  z-index: 1001;
 }
 
 .hamburger span {
+  display: block;
   width: 26px;
   height: 3px;
   background: #1a1a2e;
@@ -163,7 +165,7 @@
 
 @media (max-width: 768px) {
   .hamburger {
-    display: flex;
+    display: flex !important;
   }
 
   .nav-links {
