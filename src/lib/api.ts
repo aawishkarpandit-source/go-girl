@@ -59,3 +59,19 @@ export async function dbDeleteProduct(id: string): Promise<boolean> {
   });
   return res?.ok === true;
 }
+
+export async function dbCreateOrder(order: {
+  items: { name: string; quantity: number; price: number }[];
+  email: string;
+  name: string;
+  phone: string;
+  address: string;
+  total: number;
+}): Promise<{ id: string } | null> {
+  const res = await apiFetch<{ order: { id: string } }>("/api/orders", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(order),
+  });
+  return res?.order ?? null;
+}

@@ -5,6 +5,9 @@ import "./AdminOrders.css";
 interface Order {
   id: string;
   email: string;
+  name: string;
+  phone: string;
+  address: string;
   items: { name: string; quantity: number; price: number }[];
   total: number;
   status: string;
@@ -79,7 +82,12 @@ export default function AdminOrders() {
                   </select>
                 </div>
               </div>
-              <p className="order-email">📧 {order.email}</p>
+              <p className="order-email">
+                📧 {order.email}
+                {order.name && <span className="order-customer-name"> · {order.name}</span>}
+              </p>
+              {order.phone && <p className="order-email">📞 {order.phone}</p>}
+              {order.address && <p className="order-email">📍 {order.address}</p>}
               <div className="order-items">
                 {order.items.map((item, i) => (
                   <div key={i} className="order-item">

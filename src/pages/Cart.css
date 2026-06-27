@@ -199,6 +199,75 @@
   transform: scale(1.02);
 }
 
+/* Checkout Form */
+.checkout-form {
+  margin-bottom: 1rem;
+}
+
+.checkout-form .form-group {
+  margin-bottom: 0.75rem;
+}
+
+.checkout-form .form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #334155;
+  margin-bottom: 0.3rem;
+}
+
+.checkout-form .form-group input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.checkout-form .form-group input:focus {
+  border-color: #e91e8c;
+}
+
+/* Order Confirmation */
+.order-confirmation {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.confirm-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.order-confirmation h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+}
+
+.confirm-id {
+  font-size: 0.95rem;
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+
+.confirm-total {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e91e8c;
+  margin-bottom: 0.5rem;
+}
+
+.confirm-msg {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
 @media (max-width: 768px) {
   .cart-page {
     padding-top: 90px;
